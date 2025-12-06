@@ -1,0 +1,32 @@
+#include <iostream>
+
+int main() {
+    const int m = 3;
+    const int n = 4;
+    int a[m][n];
+
+    for (int i = 0; i < m; ++i) {
+        for (int j = 0; j < n; ++j) {
+            std::cin >> a[i][j];
+        }
+    }
+
+    int maxVal = a[0][0];
+    int maxRow = 0;
+    int maxCol = 0;
+
+    for (int i = 0; i < m; ++i) {
+        for (int j = 0; j < n; ++j) {
+            if (a[i][j] > maxVal) {
+                maxVal = a[i][j];
+                maxRow = i;
+                maxCol = j;
+            }
+        }
+    }
+
+    std::cout << "Maximum value: " << maxVal << "\n";
+    std::cout << "Position: (" << maxRow << ", " << maxCol << ")\n";
+
+    return 0;
+}
