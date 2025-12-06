@@ -3,19 +3,24 @@
 using namespace std;
 
 int main() {
-    double a = 1;
-    double b = 0,001;
+    double a = 1.0;
+    double b = 0.001;
 
-    const double PI = acos(-1.0);
-    double numerator   = 0.807 * (1 - pow(sin((a - b) * PI / 4.0), 2));
-    double denominator = 0.312 * (1 + pow(cos((a + b) * PI / 4.0), 2));
+    double insideCos = cos((a - b) * M_PI / 8.0);
+
+    double numerator = log(insideCos);
+
+    double denominator = 0.137;
 
     double fraction = numerator / denominator;
-    double powerPart = pow((a * a) / pow(b, 3), 2.0 / 3.0);
-    
-    double result = powerPart * exp(1.0) * fraction;
 
-    cout << "Result = " << result << endl;
+    double cubeRoot = cbrt(((a - b) / (a + b)) * exp(1.0));
+
+    double insideSqrt = fraction * cubeRoot;
+
+    double f = sqrt(insideSqrt);
+
+    cout << "f = " << f << endl;
 
     return 0;
 }
