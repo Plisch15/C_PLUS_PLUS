@@ -1,0 +1,23 @@
+#include <iostream>
+
+int main() {
+    const int m = 4;
+    const int n = 6;
+    int a[m][n];
+
+    for (int i = 0; i < m; ++i) {
+        for (int j = 0; j < n; ++j) {
+            std::cin >> a[i][j];
+        }
+    }
+
+    for (int j = 0; j < n; ++j) {
+        int colSum = 0;
+        for (int i = 0; i < m; ++i) {
+            colSum += a[i][j];
+        }
+        std::cout << "Column " << j << ": " << colSum << "\n";
+    }
+
+    return 0;
+}
