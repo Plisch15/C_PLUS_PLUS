@@ -1,0 +1,16 @@
+#include <iostream>
+using namespace std;
+
+int main() {
+    double x, y;
+    cout << "Enter coordinates (x y): ";
+    cin >> x >> y;
+
+    if (x > 0 && y > 1.0 / x) {
+        cout << "The point is INSIDE the shaded area." << endl;
+    } else {
+        cout << "The point is OUTSIDE the shaded area." << endl;
+    }
+
+    return 0;
+}
