@@ -1,0 +1,59 @@
+#include <iostream>
+using namespace std;
+
+int main() {
+    int code;
+    
+    cout << "Enter phone code (first 3 digits, e.g., 067, 097, etc.): ";
+    cin >> code;
+
+    cout << "Operator: ";
+
+    switch(code) {
+        case 50:
+        case 66:
+        case 95:
+        case 99:
+            cout << "Vodafone";
+            break;
+
+        case 67:
+        case 68:
+        case 96:
+        case 97:
+        case 98:
+            cout << "Kyivstar";
+            break;
+
+        case 63:
+        case 73:
+        case 93:
+            cout << "Lifecell";
+            break;
+
+        case 91:
+            cout << "3mob / TriMob";
+            break;
+
+        case 92:
+            cout << "PEOPLEnet";
+            break;
+
+        case 94:
+            cout << "Intertelecom";
+            break;
+
+        case 89:
+        case 80:
+            cout << "Just call / others";
+            break;
+
+        default:
+            cout << "Unknown operator";
+            break;
+    }
+
+    cout << endl;
+
+    return 0;
+}
