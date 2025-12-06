@@ -3,19 +3,20 @@
 using namespace std;
 
 int main() {
-    double a = 3;
-    double b = 2,712;
+    double a = 3.0;
+    double b = 2.712;
 
-    const double PI = acos(-1.0);
-    double numerator   = 0.807 * (1 - pow(sin((a - b) * PI / 4.0), 2));
-    double denominator = 0.312 * (1 + pow(cos((a + b) * PI / 4.0), 2));
+    double numerator = 0.807 * (1 - pow(sin((a - b) * M_PI / 4.0), 2));
 
-    double fraction = numerator / denominator;
-    double powerPart = pow((a * a) / pow(b, 3), 2.0 / 3.0);
-    
-    double result = powerPart * exp(1.0) * fraction;
+    double denominator = 0.312 * (1 + pow(cos((a + b) * M_PI / 4.0), 2));
 
-    cout << "Result = " << result << endl;
+    double exponent = numerator / denominator;
+
+    double base = pow((pow(a, 2) / pow(b, 3)), 2.0 / 3.0);
+
+    double f = base * exp(exponent);
+
+    cout << "f = " << f << endl;
 
     return 0;
 }
