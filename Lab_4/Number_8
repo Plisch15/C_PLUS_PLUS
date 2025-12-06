@@ -1,0 +1,25 @@
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+int main() {
+    int x, y;
+    cin >> x >> y;
+
+    if (x == 0 || y == 0) {
+        cout << "Cannot divide by zero\n";
+        return 1;
+    }
+
+    float f1 = 1.0f / x;
+    float f2 = 1.0f / y;
+
+    const float epsilon = 0.000001f;
+
+    if (fabs(f1 - f2) < epsilon)
+        cout << "Results are equal (by 0.000001 epsilon)\n";
+    else
+        cout << "Results are not equal (by 0.000001 epsilon)\n";
+
+    return 0;
+}
