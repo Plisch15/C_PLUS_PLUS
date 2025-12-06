@@ -1,1 +1,27 @@
-a
+#include <iostream>
+#include <cmath>
+
+using namespace std;
+
+double calculateY(double x, double gamma) {
+    if (x <= 0) {
+        return x * x - sin(gamma);
+    } else {
+        return sqrt(x) + cos(gamma);
+    }
+}
+
+int main() {
+    double x, gamma;
+
+    cout << "Enter x: ";
+    cin >> x;
+
+    cout << "Enter gamma (in radians): ";
+    cin >> gamma;
+
+    double y = calculateY(x, gamma);
+    cout << "Y = " << y << endl;
+
+    return 0;
+}
