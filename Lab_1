@@ -15,7 +15,7 @@ int main() {
     
     double result = powerPart * exp(1.0) * fraction;
 
-    cout << "Результат = " << result << endl;
+    cout << "Result = " << result << endl;
 
     return 0;
 }
