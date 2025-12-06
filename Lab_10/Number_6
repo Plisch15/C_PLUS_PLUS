@@ -1,0 +1,32 @@
+#include <iostream>
+
+int main() {
+    const int m = 4;
+    const int n = 7;
+    int a[m][n];
+
+    for (int i = 0; i < m; ++i) {
+        for (int j = 0; j < n; ++j) {
+            std::cin >> a[i][j];
+        }
+    }
+
+    int minVal = a[0][0];
+    int minRow = 0;
+    int minCol = 0;
+
+    for (int i = 0; i < m; ++i) {
+        for (int j = 0; j < n; ++j) {
+            if (a[i][j] < minVal) {
+                minVal = a[i][j];
+                minRow = i;
+                minCol = j;
+            }
+        }
+    }
+
+    std::cout << "Minimum value: " << minVal << "\n";
+    std::cout << "Position: (" << minRow << ", " << minCol << ")\n";
+
+    return 0;
+}
