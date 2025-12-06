@@ -1,0 +1,24 @@
+#include <iostream>
+using namespace std;
+
+int main() {
+    int N;
+    
+    cout << "Enter a three-digit positive number: ";
+    cin >> N;
+
+    if (N >= 100 && N <= 999) {
+        int firstDigit = N / 100;          // перша цифра
+        int middleDigit = (N / 10) % 10;   // друга цифра
+        int lastDigit = N % 10;            // третя цифра
+
+        int swappedNumber = lastDigit * 100 + middleDigit * 10 + firstDigit;
+
+        cout << "Original number: " << N << endl;
+        cout << "Number after swapping first and last digits: " << swappedNumber << endl;
+    } else {
+        cout << "Error: The number is not three-digit or positive." << endl;
+    }
+
+    return 0;
+}
