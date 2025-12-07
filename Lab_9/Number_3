@@ -2,16 +2,16 @@
 #include <vector>
 #include <algorithm>
 
+using namespace std; 
+
 int main() {
     int n;
-     std::cout << "Enter rozmir masivu:";
-    std::cin >> n;
+    cin >> n;       
     if (n <= 0) return 1;
 
-    std::vector<int> a(n);
+    vector<int> a(n);
     for (int i = 0; i < n; ++i) {
-        std::cout << "Enter znachenna masivu:";
-        std::cin >> a[i];
+        cin >> a[i];    
     }
 
     int minIndex = 0;
@@ -21,13 +21,13 @@ int main() {
         if (a[i] > a[maxIndex]) maxIndex = i;
     }
 
-    std::swap(a[minIndex], a[maxIndex]);
+    swap(a[minIndex], a[maxIndex]);
 
     for (int i = 0; i < n; ++i) {
-        if (i) std::cout << ' ';
-        std::cout << a[i];
+        if (i) cout << ' ';   
+        cout << a[i];
     }
-    std::cout << '\n';
+    cout << '\n';
 
     return 0;
 }
