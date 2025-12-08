@@ -26,6 +26,6 @@ int main() {
         }
     }
 
-    cout << max2 << '\n';
+    cout <<"2 po vel. element:" <<  max2 << '\n';
     return 0;
 }
