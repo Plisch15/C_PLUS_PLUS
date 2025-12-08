@@ -1,5 +1,7 @@
 #include <iostream>
 
+using namespace std;
+
 struct Time {
     int hours = 0;
     int minutes = 0;
@@ -9,12 +11,12 @@ int main() {
     Time t;
     int addMinutes;
 
-    std::cin >> t.hours;
-    std::cin >> t.minutes;
-    std::cin >> addMinutes;
+    cin >> t.hours;
+    cin >> t.minutes;
+    cin >> addMinutes;
 
     if (t.hours < 0 || t.hours >= 24 || t.minutes < 0 || t.minutes >= 60 || addMinutes < 0) {
-        std::cout << "Invalid input\n";
+        cout << "Invalid input\n";
         return 1;
     }
 
@@ -22,7 +24,7 @@ int main() {
     t.hours = (totalMinutes / 60) % 24;
     t.minutes = totalMinutes % 60;
 
-    std::cout << t.hours << ":" << (t.minutes < 10 ? "0" : "") << t.minutes << "\n";
+    cout << t.hours << ":" << (t.minutes < 10 ? "0" : "") << t.minutes << "\n";
 
     return 0;
 }
