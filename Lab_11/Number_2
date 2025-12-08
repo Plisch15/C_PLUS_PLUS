@@ -1,5 +1,7 @@
 #include <iostream>
 
+using namespace std;
+
 struct Time {
     int hours = 0;
     int minutes = 0;
@@ -8,12 +10,12 @@ struct Time {
 int main() {
     Time start, end;
 
-    std::cin >> start.hours >> start.minutes;
-    std::cin >> end.hours >> end.minutes;
+    cin >> start.hours >> start.minutes;
+    cin >> end.hours >> end.minutes;
 
     if (start.hours < 0 || start.hours >= 24 || start.minutes < 0 || start.minutes >= 60 ||
         end.hours < 0 || end.hours >= 24 || end.minutes < 0 || end.minutes >= 60) {
-        std::cout << "Invalid input\n";
+        cout << "Invalid input\n";
         return 1;
     }
 
@@ -31,7 +33,7 @@ int main() {
     duration.hours = durationMinutes / 60;
     duration.minutes = durationMinutes % 60;
 
-    std::cout << duration.hours << ":" << duration.minutes << "\n";
+    cout << duration.hours << ":" << duration.minutes << "\n";
 
     return 0;
 }
