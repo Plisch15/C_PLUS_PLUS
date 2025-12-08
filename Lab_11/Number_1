@@ -10,9 +10,11 @@ struct Time {
 int main() {
     Time t;
     int addMinutes;
-
+    cout << "Hour:";
     cin >> t.hours;
+    cout << "Minutes:";
     cin >> t.minutes;
+    cout << "AddMinutes:";
     cin >> addMinutes;
 
     if (t.hours < 0 || t.hours >= 24 || t.minutes < 0 || t.minutes >= 60 || addMinutes < 0) {
@@ -24,7 +26,7 @@ int main() {
     t.hours = (totalMinutes / 60) % 24;
     t.minutes = totalMinutes % 60;
 
-    cout << t.hours << ":" << (t.minutes < 10 ? "0" : "") << t.minutes << "\n";
+    cout << "Time:" << t.hours << ":" << (t.minutes < 10 ? "0" : "") << t.minutes << "\n";
 
     return 0;
 }
