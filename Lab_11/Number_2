@@ -7,27 +7,46 @@ struct Time {
     int minutes = 0;
 };
 
+struct Date {
+    int day = 1;
+    int month = 1;
+    int year = 2000;
+};
+
+struct DateTime {
+    Date date;
+    Time time;
+};
+
+int totalMinutes(const DateTime& dt) {
+    int daysSinceStart = dt.date.year * 365 + dt.date.month * 30 + dt.date.day;
+    int minutes = daysSinceStart * 24 * 60 + dt.time.hours * 60 + dt.time.minutes;
+    return minutes;
+}
+
 int main() {
-    Time start, end;
+    DateTime start, end;
 
-    cin >> start.hours >> start.minutes;
-    cin >> end.hours >> end.minutes;
+    cin >> start.date.day >> start.date.month >> start.date.year;
+    cin >> start.time.hours >> start.time.minutes;
+    cin >> end.date.day >> end.date.month >> end.date.year;
+    cin >> end.time.hours >> end.time.minutes;
 
-    if (start.hours < 0 || start.hours >= 24 || start.minutes < 0 || start.minutes >= 60 ||
-        end.hours < 0 || end.hours >= 24 || end.minutes < 0 || end.minutes >= 60) {
+    if (start.time.hours < 0 || start.time.hours >= 24 || start.time.minutes < 0 || start.time.minutes >= 60 ||
+        end.time.hours < 0 || end.time.hours >= 24 || end.time.minutes < 0 || end.time.minutes >= 60) {
         cout << "Invalid input\n";
         return 1;
     }
 
-    int startTotalMinutes = start.hours * 60 + start.minutes;
-    int endTotalMinutes = end.hours * 60 + end.minutes;
+    int startTotal = totalMinutes(start);
+    int endTotal = totalMinutes(end);
 
-    int durationMinutes;
-    if (endTotalMinutes >= startTotalMinutes) {
-        durationMinutes = endTotalMinutes - startTotalMinutes;
-    } else {
-        durationMinutes = (24 * 60 - startTotalMinutes) + endTotalMinutes;
+    if (endTotal < startTotal) {
+        cout << "End date-time must be after start date-time\n";
+        return 1;
     }
+
+    int durationMinutes = endTotal - startTotal;
 
     Time duration;
     duration.hours = durationMinutes / 60;
