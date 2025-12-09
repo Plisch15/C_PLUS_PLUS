@@ -10,7 +10,7 @@ struct Time {
 struct Date {
     int day = 1;
     int month = 1;
-    int year = 2000;
+    int year = 0;
 };
 
 struct DateTime {
@@ -27,9 +27,14 @@ int totalMinutes(const DateTime& dt) {
 int main() {
     DateTime start, end;
 
+    cout << "Enter start date (day month year): ";
     cin >> start.date.day >> start.date.month >> start.date.year;
+    cout << "Enter start time (hours minutes): ";
     cin >> start.time.hours >> start.time.minutes;
+
+    cout << "Enter end date (day month year): ";
     cin >> end.date.day >> end.date.month >> end.date.year;
+    cout << "Enter end time (hours minutes): ";
     cin >> end.time.hours >> end.time.minutes;
 
     if (start.time.hours < 0 || start.time.hours >= 24 || start.time.minutes < 0 || start.time.minutes >= 60 ||
@@ -52,7 +57,7 @@ int main() {
     duration.hours = durationMinutes / 60;
     duration.minutes = durationMinutes % 60;
 
-    cout << duration.hours << ":" << duration.minutes << "\n";
+    cout << "Duration: " << duration.hours << ":" << duration.minutes << "\n";
 
     return 0;
 }
