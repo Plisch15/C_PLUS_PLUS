@@ -1,0 +1,52 @@
+#include <iostream>
+
+class FlightBooking {
+public:
+    FlightBooking(int id, int capacity, int reserved);
+    void printStatus();
+private:
+    int id;
+    int capacity;
+    int reserved;
+};
+
+// Конструктор: зберігаємо отримані аргументи у приватні змінні класу
+FlightBooking::FlightBooking(int id, int capacity, int reserved)
+{
+    this->id = id;
+    this->capacity = capacity;
+    this->reserved = reserved;
+}
+
+// Метод виведення статусу рейсу
+void FlightBooking::printStatus()
+{
+    double percentage = 0.0;
+    
+    // Захист від ділення на нуль, якщо раптом capacity буде дорівнювати 0
+    if (capacity > 0) {
+        // Множимо на 100.0 (тип double), щоб уникнути втрати точності через цілочисельне ділення
+        percentage = (reserved * 100.0) / capacity;
+    }
+    
+    // Виводимо рядок чітко за шаблоном із завдання
+    std::cout << "Flight " << id << " : " << reserved << "/" << capacity 
+              << " (" << percentage << "%) seats reserved" << std::endl;
+}
+
+int main() {
+    int reserved = 0, capacity = 0;
+    
+    std::cout << "Provide flight capacity: ";
+    std::cin >> capacity;
+    std::cout << "Provide number of reserved seats: ";
+    std::cin >> reserved;
+    
+    // Створюємо об'єкт бронювання (ID за замовчуванням передаємо як 1)
+    FlightBooking booking(1, capacity, reserved);
+    
+    // Викликаємо метод для друку звіту
+    booking.printStatus();
+    
+    return 0;
+}
