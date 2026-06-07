@@ -1,0 +1,69 @@
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+#include <iomanip>
+
+using namespace std;
+
+int main() {
+    srand(time(0));
+    
+    int rows = 3;
+    int cols = 3;
+
+    // 1. Створення двовимірного динамічного масиву
+    int** matrix = new int*[rows]; // Масив вказівників на рядки
+    for (int i = 0; i < rows; i++) {
+        matrix[i] = new int[cols]; // Виділення пам'яті під кожен рядок
+    }
+
+    // 2. Заповнення випадковими цілими числами та виведення
+    cout << "--- Динамічна матриця 3х3 ---" << endl;
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            matrix[i][j] = rand() % 100; // Випадкові числа від 0 до 99
+            cout << setw(4) << matrix[i][j];
+        }
+        cout << endl;
+    }
+    cout << "----------------------------" << endl << endl;
+
+    // 3. Знаходження елементів діагоналей
+    cout << "Елементи головної діагоналі: ";
+    for (int i = 0; i < rows; i++) {
+        cout << matrix[i][i] << " "; // i == j
+    }
+    cout << endl;
+
+    cout << "Елементи побічної діагоналі: ";
+    for (int i = 0; i < rows; i++) {
+        cout << matrix[i][rows - 1 - i] << " "; // j == rows - 1 - i
+    }
+    cout << endl << endl;
+
+    // 4. Підрахунок парних та непарних елементів
+    int evenCount = 0;
+    int oddCount = 0;
+
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            if (matrix[i][j] % 2 == 0) {
+                evenCount++;
+            } else {
+                oddCount++;
+            }
+        }
+    }
+
+    cout << "Кількість парних елементів: " << evenCount << endl;
+    cout << "Кількість непарних елементів: " << oddCount << endl << endl;
+
+    // 5. Обов'язкове очищення динамічної пам'яті
+    for (int i = 0; i < rows; i++) {
+        delete[] matrix[i]; // Спочатку видаляємо кожен рядок
+    }
+    delete[] matrix; // Потім видаляємо масив вказівників
+    matrix = nullptr;
+
+    return 0;
+}
