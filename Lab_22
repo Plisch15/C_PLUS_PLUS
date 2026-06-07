@@ -1,0 +1,98 @@
+#include <iostream>
+#include <string>
+#include <sstream>
+#include <cmath>
+
+using namespace std;
+
+class Fraction {
+public:
+    Fraction(int numerator, int denominator);
+    string toString();
+    double toDouble();
+private:
+    int numerator;
+    int denominator;
+};
+
+// Конструктор класу
+Fraction::Fraction(int numerator, int denominator) {
+    this->numerator = numerator;
+    this->denominator = denominator;
+
+    // Нормалізуємо знак: якщо знаменник від'ємний, переносимо мінус у чисельник
+    if (this->denominator < 0) {
+        this->numerator = -this->numerator;
+        this->denominator = -this->denominator;
+    }
+}
+
+// Метод для отримання значення у вигляді числа з плаваючою крапкою
+double Fraction::toDouble() {
+    // Приведення до double обов'язкове, щоб уникнути цілочисельного ділення
+    return static_cast<double>(numerator) / denominator;
+}
+
+// Метод для формування красивого текстового представлення дробу
+string Fraction::toString() {
+    // Якщо чисельник дорівнює 0, то весь дріб — це просто "0"
+    if (numerator == 0) {
+        return "0";
+    }
+
+    string result = "";
+    
+    // Запам'ятовуємо, чи є число від'ємним, і далі працюємо з модулями чисел
+    bool is_negative = (numerator < 0);
+    int abs_num = abs(numerator);
+    int abs_den = abs(denominator);
+
+    // Виділяємо цілу частину та залишок чисельника
+    int whole_part = abs_num / abs_den;
+    int remainder = abs_num % abs_den;
+
+    // Якщо число від'ємне, додаємо мінус на самий початок
+    if (is_negative) {
+        result += "-";
+    }
+
+    // Сценарій 1: Є і ціла частина, і дробова залишається
+    if (whole_part > 0 && remainder > 0) {
+        result += to_string(whole_part) + " " + to_string(remainder) + "/" + to_string(abs_den);
+    }
+    // Сценарій 2: Дріб поділився націло (наприклад, 8/4 = 2)
+    else if (whole_part > 0 && remainder == 0) {
+        result += to_string(whole_part);
+    }
+    // Сценарій 3: Чисто правильний дріб (цілої частини немає, наприклад, 3/4)
+    else {
+        result += to_string(remainder) + "/" + to_string(abs_den);
+    }
+
+    return result;
+}
+
+int main(void) {
+    int num = 0, den = 1;
+    string input = "";
+
+    // Зчитуємо весь рядок повністю
+    getline(cin, input);
+
+    // Парсинг вхідного рядка формату "чисельник / знаменник"
+    stringstream ss(input);
+    char slash;
+    
+    // Стрім автоматично пропустить пробіли навколо чисел та знаку '/'
+    if (ss >> num >> slash >> den) {
+        // Успішно розпарсили значення
+        Fraction fraction(num, den);
+        
+        // Виведення результату чітко за зразком
+        cout << fraction.toString() << " is " << fraction.toDouble() << " in decimal" << endl;
+    } else {
+        cout << "Invalid input format!" << endl;
+    }
+
+    return 0;
+}
