@@ -1,0 +1,101 @@
+#include <iostream>
+
+using namespace std;
+
+// ==========================================
+// 1. РЕАЛІЗАЦІЯ КЛАСУ AD-HOC SQUARE
+// ==========================================
+class AdHocSquare
+{
+public:
+    // Конструктор
+    AdHocSquare(double side) {
+        set_side(side);
+    }
+
+    // Сетер — просто оновлює сторону
+    void set_side(double s) {
+        if (s >= 0) {
+            this->side = s;
+        }
+    }
+
+    // Геттер — обчислює площу "на льоту" при кожному виклику
+    double get_area() {
+        return side * side; 
+    }
+
+private:
+    double side;
+};
+
+// ==========================================
+// 2. РЕАЛІЗАЦІЯ КЛАСУ LAZY SQUARE
+// ==========================================
+class LazySquare
+{
+public:
+    // Конструктор
+    LazySquare(double side) {
+        // Спочатку ставимо дефолтні значення
+        this->side = 0;
+        this->area = 0;
+        this->side_changed = true; // Змушуємо перший виклик get_area зробити прорахунок
+        
+        set_side(side);
+    }
+
+    // Сетер — фіксує зміну сторони, але НЕ рахує площу одразу
+    void set_side(double s) {
+        if (s >= 0 && s != this->side) {
+            this->side = s;
+            this->side_changed = true; // Піднімаємо прапорець: дані застаріли!
+        }
+    }
+
+    // Геттер — перераховує лише якщо прапорець піднято
+    double get_area() {
+        if (side_changed) {
+            cout << "[Lazy Log] Важке обчислення площі..." << endl;
+            area = side * side;   // Перераховуємо
+            side_changed = false; // Опускаємо прапорець, тепер дані актуальні
+        } else {
+            cout << "[Lazy Log] Повертаємо готове збережене значення (без обчислень)." << endl;
+        }
+        return area;
+    }
+
+private:
+    double side;
+    double area;
+    bool side_changed;
+};
+
+// ==========================================
+// ДЕМОНСТРАЦІЯ РОБОТИ
+// ==========================================
+int main()
+{
+    cout << "=== Тестуємо AdHocSquare ===" << endl;
+    AdHocSquare ah_sq(4.0);
+    cout << "Area: " << ah_sq.get_area() << endl; // Рахує 4 * 4
+    cout << "Area знову: " << ah_sq.get_area() << endl; // Знову рахує 4 * 4
+    
+    cout << "\n=== Тестуємо LazySquare ===" << endl;
+    LazySquare lazy_sq(5.0); // Створили, але площа ще не рахувалася
+    
+    // Перший виклик: прапорець true -> прораховує
+    cout << "Area виклик 1: " << lazy_sq.get_area() << endl; 
+    
+    // Другий виклик: сторона не мінялась, прапорець false -> миттєве повернення з пам'яті
+    cout << "Area виклик 2: " << lazy_sq.get_area() << endl; 
+    
+    // Змінюємо сторону
+    lazy_sq.set_side(6.0); // Обчислення площі НЕ відбувається!
+    
+    // Викликаємо геттер після зміни сторони -> знову прораховує
+    cout << "Area виклик 3 (після зміни сторони): " << lazy_sq.get_area() << endl;
+    cout << "Area виклик 4: " << lazy_sq.get_area() << endl;
+
+    return 0;
+}
