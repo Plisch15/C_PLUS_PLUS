@@ -1,0 +1,28 @@
+#include <iostream>
+using namespace std;
+
+// --- Початок вашого коду (Перевантажені функції) ---
+
+// Варіант 1: Приймає один аргумент і збільшує його на 1
+void increment(int &value) {
+    value += 1;
+}
+
+// Варіант 2: Приймає два аргументи і збільшує перший на значення другого
+void increment(int &value, int expression) {
+    value += expression;
+}
+
+// --- Кінець вашого коду ---
+
+int main(void) {
+    int var = 0;
+    for(int i = 0; i < 10; i++) {
+        if(i % 2)
+            increment(var);       // Виклик версії з 1 аргументом
+        else
+            increment(var, i);    // Виклик версії з 2 аргументами
+    }
+    cout << var << endl; // Виведе 25
+    return 0;
+}
