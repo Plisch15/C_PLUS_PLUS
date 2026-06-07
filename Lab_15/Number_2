@@ -1,0 +1,53 @@
+#include <iostream>
+using namespace std;
+
+bool isLeap(int year) {
+    if (year % 400 == 0) return true;
+    if (year % 100 == 0) return false;
+    return year % 4 == 0;
+}
+
+int monthLength(int year, int month) {
+    // --- Початок вашого коду (Варіант з switch) ---
+    
+    switch (month) {
+        // Місяці, у яких завжди 31 день
+        case 1:  // Січень
+        case 3:  // Березень
+        case 5:  // Травень
+        case 7:  // Липень
+        case 8:  // Серпень
+        case 10: // Жовтень
+        case 12: // Грудень
+            return 31;
+
+        // Місяці, у яких завжди 30 днів
+        case 4:  // Квітень
+        case 6:  // Червень
+        case 9:  // Вересень
+        case 11: // Листопад
+            return 30;
+
+        // Лютий (залежить від високосного року)
+        case 2:
+            if (isLeap(year)) {
+                return 29;
+            } else {
+                return 28;
+            }
+
+        default:
+            return 0; // На випадок некоректного номера місяця
+    }
+    
+    // --- Кінець вашого коду ---
+}
+
+int main(void) {
+    for(int yr = 2000; yr < 2002; yr++) {
+        for(int mo = 1; mo <= 12; mo++)
+            cout << monthLength(yr, mo) << " ";
+        cout << endl;
+    }
+    return 0;
+}
