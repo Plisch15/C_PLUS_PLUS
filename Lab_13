@@ -1,0 +1,73 @@
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+#include <iomanip>
+
+using namespace std;
+
+int main() {
+    // Налаштування генератора випадкових чисел
+    srand(time(0));
+    
+    const int N = 5; // Розмірність квадратної матриці N x N
+    int matrix[N][N];
+    
+    // Вказівник на самий перший елемент матриці
+    int *basePtr = &matrix[0][0];
+    
+    // 1. Заповнення масиву випадковими числами та виведення на екран
+    cout << "--- Згенерована матриця ---" << endl;
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < N; j++) {
+            // Обчислюємо адресу поточного елемента за допомогою зміщення
+            int *currentPtr = basePtr + (i * N + j);
+            
+            // Записуємо випадкове число від 1 до 99
+            *currentPtr = rand() % 99 + 1; 
+            
+            // Виводимо значення на екран
+            cout << setw(4) << *currentPtr;
+        }
+        cout << endl;
+    }
+    cout << "---------------------------" << endl << endl;
+
+    // Змінні для підрахунку парних/непарних
+    int evenCount = 0;
+    int oddCount = 0;
+
+    // 2. Підрахунок кількості парних та непарних елементів
+    // Проходимо по всій матриці як по лінійному масиву з N*N елементів
+    for (int k = 0; k < N * N; k++) {
+        int element = *(basePtr + k);
+        if (element % 2 == 0) {
+            evenCount++;
+        } else {
+            oddCount++;
+        }
+    }
+
+    // 3. Виведення головної діагоналі
+    cout << "Елементи головної діагоналі: ";
+    for (int i = 0; i < N; i++) {
+        // Формула зміщення для головної діагоналі (i == j)
+        int *diagPtr = basePtr + (i * N + i);
+        cout << *diagPtr << " ";
+    }
+    cout << endl;
+
+    // 4. Виведення побічної діагоналі
+    cout << "Елементи побічної діагоналі: ";
+    for (int i = 0; i < N; i++) {
+        // Формула зміщення для побічної діагоналі (j == N - 1 - i)
+        int *sideDiagPtr = basePtr + (i * N + (N - 1 - i));
+        cout << *sideDiagPtr << " ";
+    }
+    cout << endl << endl;
+
+    // 5. Виведення результатів підрахунку
+    cout << "Кількість парних елементів: " << evenCount << endl;
+    cout << "Кількість непарних елементів: " << oddCount << endl;
+
+    return 0;
+}
