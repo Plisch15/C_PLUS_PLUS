@@ -1,0 +1,64 @@
+#include <iostream>
+#include <string>
+#include <cctype>
+
+int main()
+{
+    std::string password;
+    std::getline(std::cin, password);
+
+    // Ініціалізуємо прапорці для кожної вимоги безпеки
+    bool has_length = (password.length() >= 8);
+    bool has_upper = false;
+    bool has_lower = false;
+    bool has_digit = false;
+    bool has_special = false;
+
+    // Проходимо по кожному символу пароля для аналізу його типу
+    for (char ch : password) {
+        if (std::isupper(ch)) {
+            has_upper = true;
+        } else if (std::islower(ch)) {
+            has_lower = true;
+        } else if (std::isdigit(ch)) {
+            has_digit = true;
+        } else if (std::ispunct(ch) || ch == '[' || ch == ']' || ch == '{' || ch == '}') {
+            // std::ispunct охоплює більшість розділових та спеціальних знаків
+            has_special = true;
+        }
+        // Також можна вважати спеціальним будь-який символ, що не є буквою чи цифрою:
+        // if (!std::isalnum(ch)) { has_special = true; }
+    }
+
+    // Змінна для фіксації загальної валідності пароля
+    bool is_valid = true;
+
+    // Перевірка та послідовне виведення помилок (якщо вони є)
+    if (!has_length) {
+        std::cout << "The password must be 8 characters long\n";
+        is_valid = false;
+    }
+    if (!has_upper) {
+        std::cout << "The password must have at least one upper case letter\n";
+        is_valid = false;
+    }
+    if (!has_lower) {
+        std::cout << "The password must have at least one lower case letter\n";
+        is_valid = false;
+    }
+    if (!has_digit) {
+        std::cout << "The password must have at least one digit\n";
+        is_valid = false;
+    }
+    if (!has_special) {
+        std::cout << "The password must have at least one special character\n";
+        is_valid = false;
+    }
+
+    // Якщо жоден критерій не було порушено
+    if (is_valid) {
+        std::cout << "The password is valid\n";
+    }
+
+    return 0;
+}
