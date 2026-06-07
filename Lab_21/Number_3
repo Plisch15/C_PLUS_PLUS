@@ -1,0 +1,185 @@
+#include <iostream>
+#include <string>
+
+class FlightBooking {
+public:
+    // Конструктор за замовчуванням (для створення порожніх комірок)
+    FlightBooking();
+    // Основний конструктор
+    FlightBooking(int id, int capacity, int reserved);
+    
+    void printStatus();
+    bool addReservations(int n);
+    bool cancelReservations(int n);
+    
+    // Геттер для отримання ID рейсу
+    int getId() { return id; }
+
+private:
+    int id;
+    int capacity;
+    int reserved;
+};
+
+FlightBooking::FlightBooking() {
+    this->id = 0; // 0 означає, що рейс не існує (порожня комірка)
+    this->capacity = 0;
+    this->reserved = 0;
+}
+
+FlightBooking::FlightBooking(int id, int capacity, int reserved) {
+    this->id = id;
+    this->capacity = capacity;
+    
+    if (reserved < 0) {
+        reserved = 0;
+    }
+    
+    double max_allowed = capacity * 1.05;
+    if (reserved > max_allowed) {
+        this->reserved = static_cast<int>(max_allowed);
+    } else {
+        this->reserved = reserved;
+    }
+}
+
+bool FlightBooking::addReservations(int n) {
+    if (n < 0) return false;
+    if (this->reserved + n > this->capacity * 1.05) return false;
+    
+    this->reserved += n;
+    return true;
+}
+
+bool FlightBooking::cancelReservations(int n) {
+    if (n < 0 || this->reserved - n < 0) return false;
+    
+    this->reserved -= n;
+    return true;
+}
+
+void FlightBooking::printStatus() {
+    if (id == 0) return; // Не виводимо неіснуючі рейси
+    double percentage = 0.0;
+    if (capacity > 0) {
+        percentage = (reserved * 100.0) / capacity;
+    }
+    std::cout << "Flight " << id << " : " << reserved << "/" << capacity 
+              << " (" << percentage << "%) seats reserved" << std::endl;
+}
+
+// ========================================================
+// ГОЛОВНА ПРОГРАМА ДЛЯ КЕРУВАННЯ МАСИВОМ ОБ'ЄКТІВ
+// ========================================================
+int main() {
+    const int MAX_FLIGHTS = 10;
+    FlightBooking flights[MAX_FLIGHTS]; // Масив із 10 об'єктів (усі мають ID = 0)
+    
+    std::string command;
+    
+    while (true) {
+        std::cout << "\nEnter command: ";
+        std::cin >> command;
+        
+        if (command == "quit") {
+            break;
+        }
+        
+        // 1. КОМАНДА: create [id] [cap]
+        if (command == "create") {
+            int id, capacity;
+            std::cin >> id >> capacity;
+            
+            if (id <= 0 || capacity <= 0) {
+                std::cout << "Cannot perform this operation (Invalid ID or capacity)" << std::endl;
+                continue;
+            }
+            
+            // Перевіряємо, чи рейс із таким ID вже існує
+            bool exists = false;
+            int empty_index = -1;
+            for (int i = 0; i < MAX_FLIGHTS; i++) {
+                if (flights[i].getId() == id) {
+                    exists = true;
+                    break;
+                }
+                if (flights[i].getId() == 0 && empty_index == -1) {
+                    empty_index = i; // Запам'ятовуємо першу вільну комірку
+                }
+            }
+            
+            if (exists) {
+                std::cout << "Cannot perform this operation (Flight already exists)" << std::endl;
+            } else if (empty_index == -1) {
+                std::cout << "Cannot perform this operation (Max flights limit reached)" << std::endl;
+            } else {
+                // Перезаписуємо порожній об'єкт новим рейсом
+                flights[empty_index] = FlightBooking(id, capacity, 0);
+                flights[empty_index].printStatus();
+            }
+        }
+        // 2. КОМАНДА: delete [id]
+        else if (command == "delete") {
+            int id;
+            std::cin >> id;
+            
+            bool found = false;
+            for (int i = 0; i < MAX_FLIGHTS; i++) {
+                if (flights[i].getId() == id) {
+                    flights[i] = FlightBooking(); // Скидаємо в дефолтний стан (ID = 0)
+                    std::cout << "Flight " << id << " deleted." << std::endl;
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                std::cout << "Cannot perform this operation (Flight not found)" << std::endl;
+            }
+        }
+        // 3. КОМАНДА: add [id] [n]
+        else if (command == "add") {
+            int id, n;
+            std::cin >> id >> n;
+            
+            bool found = false;
+            for (int i = 0; i < MAX_FLIGHTS; i++) {
+                if (flights[i].getId() == id) {
+                    found = true;
+                    if (!flights[i].addReservations(n)) {
+                        std::cout << "Cannot perform this operation (Overbooking limit or invalid seats)" << std::endl;
+                    }
+                    flights[i].printStatus();
+                    break;
+                }
+            }
+            if (!found) {
+                std::cout << "Cannot perform this operation (Flight not found)" << std::endl;
+            }
+        }
+        // 4. КОМАНДА: cancel [id] [n]
+        else if (command == "cancel") {
+            int id, n;
+            std::cin >> id >> n;
+            
+            bool found = false;
+            for (int i = 0; i < MAX_FLIGHTS; i++) {
+                if (flights[i].getId() == id) {
+                    found = true;
+                    if (!flights[i].cancelReservations(n)) {
+                        std::cout << "Cannot perform this operation (Not enough reservations or invalid seats)" << std::endl;
+                    }
+                    flights[i].printStatus();
+                    break;
+                }
+            }
+            if (!found) {
+                std::cout << "Cannot perform this operation (Flight not found)" << std::endl;
+            }
+        }
+        else {
+            std::cout << "Unknown command" << std::endl;
+        }
+    }
+    
+    return 0;
+}
