@@ -1,0 +1,149 @@
+#include <iostream>
+#include <string>
+#include <sstream>
+#include <cmath>
+
+using namespace std;
+
+class Fraction {
+public:
+    Fraction(int numerator, int denominator);
+    string toString();
+    double toDouble();
+    
+    // Арифметичні операції
+    Fraction plus(Fraction that);
+    Fraction minus(Fraction that);
+    Fraction times(Fraction that);
+    Fraction by(Fraction that);
+
+private:
+    int numerator;
+    int denominator;
+    
+    // Допоміжний приватний метод для скорочення дробу
+    void reduce();
+    
+    // Статична функція для знаходження найбільшого спільного дільника (Алгоритм Евкліда)
+    static int gcd(int a, int b) {
+        while (b != 0) {
+            int temp = b;
+            b = a % b;
+            a = temp;
+        }
+        return abs(a);
+    }
+};
+
+// Конструктор класу
+Fraction::Fraction(int numerator, int denominator) {
+    this->numerator = numerator;
+    this->denominator = denominator;
+    
+    // Нормалізуємо знак: мінус має бути лише в чисельнику
+    if (this->denominator < 0) {
+        this->numerator = -this->numerator;
+        this->denominator = -this->denominator;
+    }
+    
+    // Автоматично скорочуємо дріб при створенні об'єкта
+    this->reduce();
+}
+
+// Метод для скорочення дробу
+void Fraction::reduce() {
+    if (numerator == 0) {
+        denominator = 1;
+        return;
+    }
+    int common_divisor = gcd(numerator, denominator);
+    numerator /= common_divisor;
+    denominator /= common_divisor;
+}
+
+// Реалізація арифметичних операцій
+Fraction Fraction::plus(Fraction that) {
+    // Формула: a/b + c/d = (a*d + c*b) / (b*d)
+    int num = this->numerator * that.denominator + that.numerator * this->denominator;
+    int den = this->denominator * that.denominator;
+    return Fraction(num, den);
+}
+
+Fraction Fraction::minus(Fraction that) {
+    // Формула: a/b - c/d = (a*d - c*b) / (b*d)
+    int num = this->numerator * that.denominator - that.numerator * this->denominator;
+    int den = this->denominator * that.denominator;
+    return Fraction(num, den);
+}
+
+Fraction Fraction::times(Fraction that) {
+    // Формула: a/b * c/d = (a*c) / (b*d)
+    int num = this->numerator * that.numerator;
+    int den = this->denominator * that.denominator;
+    return Fraction(num, den);
+}
+
+Fraction Fraction::by(Fraction that) {
+    // Формула: (a/b) / (c/d) = (a*d) / (b*c)
+    int num = this->numerator * that.denominator;
+    int den = this->denominator * that.numerator;
+    return Fraction(num, den);
+}
+
+double Fraction::toDouble() {
+    return static_cast<double>(numerator) / denominator;
+}
+
+string Fraction::toString() {
+    if (numerator == 0) return "0";
+
+    string result = "";
+    bool is_negative = (numerator < 0);
+    int abs_num = abs(numerator);
+    int abs_den = abs(denominator);
+
+    int whole_part = abs_num / abs_den;
+    int remainder = abs_num % abs_den;
+
+    if (is_negative) result += "-";
+
+    if (whole_part > 0 && remainder > 0) {
+        result += to_string(whole_part) + " " + to_string(remainder) + "/" + to_string(abs_den);
+    } else if (whole_part > 0 && remainder == 0) {
+        result += to_string(whole_part);
+    } else {
+        result += to_string(remainder) + "/" + to_string(abs_den);
+    }
+
+    return result;
+}
+
+// Допоміжна функція для швидкого парсингу дробу з консолі
+Fraction parseFraction() {
+    string input;
+    getline(cin, input);
+    stringstream ss(input);
+    int num = 0, den = 1;
+    char slash;
+    ss >> num >> slash >> den;
+    return Fraction(num, den);
+}
+
+int main(void) {
+    // Зчитуємо дві фракції згідно з умовами тестування
+    Fraction f1 = parseFraction();
+    Fraction f2 = parseFraction();
+
+    // Виконуємо операції та виводимо результати чітко за форматом прикладів
+    Fraction r_plus  = f1.plus(f2);
+    Fraction r_minus = f1.minus(f2);
+    Fraction r_times = f1.times(f2);
+    Fraction r_by    = f1.by(f2);
+
+    cout << f1.toString() << " + " << f2.toString() << " = " << r_plus.toString() << endl;
+    cout << f1.toString() << " - " << f2.toString() << " = " << r_minus.toString() << endl;
+    cout << f1.toString() << " * " << f2.toString() << " = " << r_times.toString() << endl;
+    cout << f1.toString() << " / " << f2.toString() << " = " << r_by.toString() << endl;
+
+    return 0;
+}
