@@ -1,0 +1,117 @@
+#include <iostream>
+#include <string>
+
+class FlightBooking {
+public:
+    FlightBooking(int id, int capacity, int reserved);
+    void printStatus();
+    bool addReservations(int n);
+    bool cancelReservations(int n);
+private:
+    int id;
+    int capacity;
+    int reserved;
+};
+
+// Модифікований конструктор із перевіркою обмежень
+FlightBooking::FlightBooking(int id, int capacity, int reserved)
+{
+    this->id = id;
+    this->capacity = capacity;
+    
+    // Якщо кількість бронювань менша за 0, встановлюємо в 0
+    if (reserved < 0) {
+        reserved = 0;
+    }
+    
+    // Перевірка ліміту овербукінгу в 105% від загальної місткості
+    double max_allowed = capacity * 1.05;
+    if (reserved > max_allowed) {
+        this->reserved = static_cast<int>(max_allowed); // обрізаємо до максимуму
+    } else {
+        this->reserved = reserved;
+    }
+}
+
+// Метод додавання нових броней
+bool FlightBooking::addReservations(int n)
+{
+    // Не можна додати від'ємну кількість місць
+    if (n < 0) return false;
+    
+    // Перевіряємо, чи не перевищить нова сума ліміт у 105%
+    if (this->reserved + n > this->capacity * 1.05) {
+        return false; 
+    }
+    
+    this->reserved += n;
+    return true;
+}
+
+// Метод скасування броней
+bool FlightBooking::cancelReservations(int n)
+{
+    // Не можна скасувати від'ємну кількість місць або більше, ніж заброньовано
+    if (n < 0 || this->reserved - n < 0) {
+        return false;
+    }
+    
+    this->reserved -= n;
+    return true;
+}
+
+// Метод виведення поточного статусу
+void FlightBooking::printStatus()
+{
+    double percentage = 0.0;
+    if (capacity > 0) {
+        percentage = (reserved * 100.0) / capacity;
+    }
+    std::cout << "Flight " << id << " : " << reserved << "/" << capacity 
+              << " (" << percentage << "%) seats reserved" << std::endl;
+}
+
+int main() {
+    int reserved = 0, capacity = 0;
+    
+    std::cout << "Provide flight capacity: ";
+    std::cin >> capacity;
+    std::cout << "Provide number of reserved seats: ";
+    std::cin >> reserved;
+    
+    // Створюємо об'єкт із початковими даними
+    FlightBooking booking(1, capacity, reserved);
+    booking.printStatus();
+    
+    std::string command;
+    // Головний цикл обробки команд інтерфейсу
+    while (true) {
+        std::cout << "\nEnter command (add [n], cancel [n], quit): ";
+        std::cin >> command;
+        
+        if (command == "quit") {
+            break;
+        } 
+        else if (command == "add") {
+            int n;
+            std::cin >> n;
+            if (!booking.addReservations(n)) {
+                std::cout << "Cannot perform this operation" << std::endl;
+            }
+            booking.printStatus();
+        } 
+        else if (command == "cancel") {
+            int n;
+            std::cin >> n;
+            if (!booking.cancelReservations(n)) {
+                std::cout << "Cannot perform this operation" << std::endl;
+            }
+            booking.printStatus();
+        } 
+        else {
+            std::cout << "Unknown command" << std::endl;
+        }
+    }
+    
+    return 0;
+}
