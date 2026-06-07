@@ -1,0 +1,50 @@
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+#include <iomanip>
+
+using namespace std;
+
+int main() {
+    // Налаштування генератора випадкових чисел
+    srand(time(0));
+    
+    int size = 10; // Кількість елементів масиву
+    
+    // Виділення динамічної пам'яті під одновимірний масив
+    double* dynamicArray = new double[size];
+    
+    // Заповнення масиву випадковими числами від -2.0 до 2.0
+    cout << "--- Динамічний масив ---" << endl;
+    for (int i = 0; i < size; i++) {
+        // rand() / RAND_MAX дає число від 0 до 1. 
+        // Помноживши на 4 і віднявши 2, отримуємо діапазон (-2, 2)
+        dynamicArray[i] = ((double)rand() / RAND_MAX) * 4.0 - 2.0;
+        
+        cout << fixed << setprecision(4) << dynamicArray[i] << " | ";
+    }
+    cout << endl << "------------------------" << endl;
+
+    int positiveCount = 0;
+    int negativeCount = 0;
+
+    // Підрахунок кількості додатних та від'ємних чисел
+    for (int i = 0; i < size; i++) {
+        if (dynamicArray[i] > 0) {
+            positiveCount++;
+        } else if (dynamicArray[i] < 0) {
+            negativeCount++;
+        }
+        // Нулі (якщо раптом випадуть) не є ні додатними, ні від'ємними
+    }
+
+    // Виведення результатів
+    cout << "Кількість додатних чисел: " << positiveCount << endl;
+    cout << "Кількість від'ємних чисел: " << negativeCount << endl;
+
+    // Обов'язкове звільнення динамічної пам'яті
+    delete[] dynamicArray;
+    dynamicArray = nullptr; // Запобігаємо появі "дикого" вказівника
+
+    return 0;
+}
