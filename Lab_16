@@ -1,0 +1,90 @@
+#include <iostream>
+#include <ctime>
+
+using namespace std;
+
+// Структура для представлення дати
+struct Date {
+    int year;
+    int month;
+    int day;
+};
+
+// Функція для перевірки, чи є рік високосним (із попереднього заняття)
+bool isLeap(int year) {
+    if (year % 400 == 0) return true;
+    if (year % 100 == 0) return false;
+    return year % 4 == 0;
+}
+
+// Функція для визначення кількості днів у місяці (із попереднього заняття)
+int monthLength(int year, int month) {
+    int daysInMonths[] = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    if (month == 2 && isLeap(year)) {
+        return 29;
+    }
+    return daysInMonths[month];
+}
+
+// --- Завдання: Опис функції today() ---
+Date today(void) {
+    time_t t = time(NULL);        // Отримуємо поточний час у секундах
+    tm tl = *localtime(&amp;t);       // Перетворюємо у структуру локального часу
+    
+    Date currentDate;
+    currentDate.year = tl.tm_year + 1900; // Роки відраховуються від 1900
+    currentDate.month = tl.tm_mon + 1;    // Місяці відраховуються від 0 (0 - січень)
+    currentDate.day = tl.tm_mday;         // День місяця
+    
+    return currentDate;
+}
+
+// Допоміжна функція: переводить дату в абсолютну кількість днів від 1 року 1 січня
+long long dateToDays(Date d) {
+    long long totalDays = 0;
+    
+    // 1. Додаємо дні за всі повні роки, що минули
+    for (int y = 1; y < d.year; y++) {
+        totalDays += isLeap(y) ? 366 : 365;
+    }
+    
+    // 2. Додаємо дні за всі повні місяці поточного року
+    for (int m = 1; m < d.month; m++) {
+        totalDays += monthLength(d.year, m);
+    }
+    
+    // 3. Додаємо дні поточного місяця
+    totalDays += d.day;
+    
+    return totalDays;
+}
+
+int main(void) {
+    // 1. Отримуємо поточну дату за допомогою нашої функції
+    Date current = today();
+    cout << "Поточна дата: " << current.year << "-" << current.month << "-" << current.day << endl;
+    
+    // 2. Вкажіть свій день народження (наприклад: 15 травня 2004 року)
+    Date birth;
+    birth.year = 2004;  // Впишіть свій рік народження
+    birth.month = 5;    // Впишіть свій місяць народження
+    birth.day = 15;     // Впишіть свій день народження
+    
+    cout << "День народження: " << birth.year << "-" << birth.month << "-" << birth.day << endl;
+    
+    // 3. Переводимо обидві дати в абсолютну кількість днів
+    long long currentDays = dateToDays(current);
+    long long birthDays = dateToDays(birth);
+    
+    // 4. Обчислюємо різницю
+    long long daysPassed = currentDays - birthDays;
+    
+    // Виведення результату
+    if (daysPassed >= 0) {
+        cout << "Від вашого дня народження до поточної дати пройшло: " << daysPassed << " днів." << endl;
+    } else {
+        cout << "Помилка: дата народження вказана у майбутньому!" << endl;
+    }
+    
+    return 0;
+}
