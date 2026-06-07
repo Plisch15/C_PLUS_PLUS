@@ -1,0 +1,64 @@
+#include <iostream>
+#include <string>
+#include <map>
+#include <sstream>
+
+int main()
+{
+    std::string values_line;
+    std::getline(std::cin, values_line);
+    
+    std::string text_template; // Змінено з 'template', бо це зарезервоване слово в C++
+    std::getline(std::cin, text_template);
+
+    // 1. Парсинг рядка з парами "ім'я=значення"
+    std::map<std::string, std::string> kv_map;
+    std::stringstream ss(values_line);
+    std::string pair;
+
+    // Розділяємо рядок за комами
+    while (std::getline(ss, pair, ',')) {
+        size_t eq_pos = pair.find('=');
+        if (eq_pos != std::string::npos) {
+            std::string name = pair.substr(0, eq_pos);
+            std::string value = pair.substr(eq_pos + 1);
+            kv_map[name] = value;
+        }
+    }
+
+    // 2. Пошук та заміна плейсхолдерів [name] у шаблоні
+    size_t start_pos = 0;
+    
+    // Шукаємо відкриваючу дужку '['
+    while ((start_pos = text_template.find('[', start_pos)) != std::string::npos) {
+        // Шукаємо закриваючу дужку ']' після знайденої відкриваючої
+        size_t end_pos = text_template.find(']', start_pos);
+        
+        if (end_pos != std::string::npos) {
+            // Вирізаємо ім'я змінної зсередини дужок
+            std::string name = text_template.substr(start_pos + 1, end_pos - start_pos - 1);
+            
+            // Перевіряємо, чи існує таке ім'я в нашій карті
+            if (kv_map.find(name) != kv_map.end()) {
+                std::string value = kv_map[name];
+                
+                // Замінюємо весь блок "[name]" на значення
+                text_template.replace(start_pos, end_pos - start_pos + 1, value);
+                
+                // Зміщуємо позицію пошуку вперед на довжину вставленого значення
+                start_pos += value.length();
+            } else {
+                // Якщо плейсхолдер невідомий, залишаємо його і йдемо далі
+                start_pos = end_pos + 1;
+            }
+        } else {
+            // Якщо закриваючої дужки немає взагалі, зупиняємо пошук у цьому місці
+            break;
+        }
+    }
+
+    // 3. Виведення обробленого тексту
+    std::cout << text_template << "\n";
+
+    return 0;
+}
