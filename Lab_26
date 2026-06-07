@@ -1,0 +1,123 @@
+#include <iostream>
+#include <string>
+#include <sstream>
+#include <vector>
+
+using namespace std;
+
+// ==========================================
+// БАЗОВИЙ КЛАС
+// ==========================================
+class IPAddress {
+protected:
+    string address; // доступно в похідних классах
+
+public:
+    // Конструктор
+    IPAddress(string addr) : address(addr) {}
+
+    // Конструктор копіювання
+    IPAddress(const IPAddress& other) {
+        this->address = other.address;
+    }
+
+    // Віртуальний деструктор
+    virtual ~IPAddress() {}
+
+    // Віртуальний метод для друку
+    virtual void print() {
+        cout << address;
+    }
+};
+
+// ==========================================
+// ПОХІДНИЙ КЛАС ІЗ ВАЛІДАЦІЄЮ
+// ==========================================
+class IPAddressChecked : public IPAddress {
+private:
+    bool is_correct;
+
+    // Допоміжний приватний метод для валідації IP-адреси
+    bool validate(string addr) {
+        stringstream ss(addr);
+        string segment;
+        int count = 0;
+
+        // Розбиваємо рядок за крапками
+        while (getline(ss, segment, '.')) {
+            count++;
+            
+            // Якщо сегмент порожній або занадто довгий
+            if (segment.empty() || segment.length() > 3) return false;
+            
+            // Перевіряємо, чи всі символи в сегменті є цифрами
+            for (char c : segment) {
+                if (!isdigit(c)) return false;
+            }
+            
+            // Перетворюємо в число та перевіряємо діапазон [0, 255]
+            int num = stoi(segment);
+            if (num < 0 || num > 255) return false;
+        }
+
+        // IPv4 має містити рівно 4 сегменти
+        return count == 4;
+    }
+
+public:
+    // Конструктор: викликає конструктор базового класу та валідує адресу
+    IPAddressChecked(string addr) : IPAddress(addr) {
+        this->is_correct = validate(addr);
+    }
+
+    // Конструктор копіювання: використовує конструктор копіювання базового класу
+    IPAddressChecked(const IPAddressChecked& other) : IPAddress(other) {
+        this->is_correct = other.is_correct;
+    }
+
+    // Перевизначений метод друку (Polymorphism)
+    void print() override {
+        // Викликаємо метод друку базового класу, щоб вивести саму адресу
+        IPAddress::print(); 
+        
+        // Додаємо інформацію про коректність
+        if (is_correct) {
+            cout << " - Correct";
+        } else {
+            cout << " - Not Correct";
+        }
+    }
+};
+
+// ==========================================
+// ГОЛОВНА ПРОГРАМА ДЛЯ ТЕСТУВАННЯ
+// ==========================================
+int main() {
+    string ip1, ip2, ip3;
+
+    // Отримуємо 3 IP-адреси від користувача
+    getline(cin, ip1);
+    getline(cin, ip2);
+    getline(cin, ip3);
+
+    // Створюємо масив вказівників на базовий клас для демонстрації поліморфізму
+    IPAddress* network[3];
+
+    // Створюємо один об'єкт IPAddress та два об'єкти IPAddressChecked
+    network[0] = new IPAddress(ip1);
+    network[1] = new IPAddressChecked(ip2);
+    network[2] = new IPAddressChecked(ip3);
+
+    // Виводимо значення для всіх трьох об'єктів через поліморфний інтерфейс
+    for (int i = 0; i < 3; i++) {
+        network[i]->print();
+        cout << endl;
+    }
+
+    // Звільнення динамічної пам'яті
+    for (int i = 0; i < 3; i++) {
+        delete network[i];
+    }
+
+    return 0;
+}
