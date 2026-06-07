@@ -1,0 +1,31 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+int main(void) {
+    int a = 8, b = 0, c = 0;
+    
+    cin >> b;
+    
+    try {
+        // Якщо користувач ввів 0, вручну генеруємо виняток.
+        // Як виняток ми передаємо текстове повідомлення (тип string).
+        if (b == 0) {
+            throw string("Your input is not valid, you can't divide by zero.");
+        }
+        
+        // Якщо помилки немає, виконується ділення
+        c = a / b;
+        
+        // Виводимо результат лише у разі успішного ділення
+        cout << c << endl;
+    }
+    // Блок catch перехоплює згенерований рядок
+    catch (const string& error_message) {
+        // Виводимо повідомлення про помилку
+        cout << error_message << endl;
+    }
+    
+    return 0;
+}
